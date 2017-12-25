@@ -58,7 +58,6 @@ class StdClient implements ClientObject {
   }
   public function request(req:OutgoingRequest):Future<IncomingResponse> 
     return Future.async(function (cb) {
-            
       var r = new haxe.Http(protocol+':'+req.header.fullUri());
       
       function send(post) {
@@ -81,14 +80,13 @@ class StdClient implements ClientObject {
           
         r.onError = function (msg) {
           if (code == 200) code = 500;
-          worker.work(true).handle(function () {
+          worker.work(function() {
             cb(new IncomingResponse(new ResponseHeader(code, 'error', headers()), msg + r.responseData));        
           });//TODO: this hack makes sure things arrive on the right thread. Great, huh?
         }
         
         r.onData = function (data) {
-          
-          worker.work(true).handle(function () {
+          worker.work(function() { 
             cb(new IncomingResponse(new ResponseHeader(code, 'OK', headers()), data));
           });//TODO: this hack makes sure things arrive on the right thread. Great, huh?
         }
