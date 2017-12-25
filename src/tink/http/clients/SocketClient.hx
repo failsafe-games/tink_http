@@ -49,7 +49,7 @@ class SocketClient implements ClientObject {
         case v: v;
       }
       
-      worker.work(function() socket.connect(new sys.net.Host(req.header.host.name), port)).handle(function(_) {
+      worker.work(function() socket.connect(new sys.net.Host(req.header.host.name), port)).handle(function() {
         var sink = Sink.ofOutput('Request to ${req.header.fullUri()}', socket.output, worker);
         var source = Source.ofInput('Response from ${req.header.fullUri()}', socket.input, worker);
         
